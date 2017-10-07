@@ -11,7 +11,8 @@ int main(int argc, char **argv)
     std::exit(EXIT_FAILURE);
   }
 
-  std::cout << mnc::tokenise(argv[1]) << std::endl;
+  mnc::Tokeniser tkn;
+  std::cout << tkn.tokenise(argv[1]) << std::endl;
 
   return 0;
 }

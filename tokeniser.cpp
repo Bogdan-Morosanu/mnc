@@ -1,11 +1,13 @@
 #include "tokeniser.hpp"
 
 #include <cctype>
+#include <cassert>
+#include <iostream>
 
 namespace mnc {
   
   std::vector<std::string>
-  tokenise(const std::string &str)
+  space_split(const std::string &str)
   {
     auto b = str.begin();
     auto e = str.end();
@@ -42,6 +44,33 @@ namespace mnc {
 	}
 	break;
       }
+    }
+
+    return retval;
+  }
+
+  
+  std::vector<VarToken>
+  Tokeniser::str_to_token(const std::vector<std::string> &str_vec)
+  {
+    std::vector<VarToken> retval;
+    retval.reserve(str_vec.size());
+
+    for (const auto &t_str : str_vec) {
+      if (this->int_lit_match.matches(t_str)) {
+	retval.emplace_back(IntLit(t_str));
+	
+      } else if (this->ident_match.matches(t_str)) {
+	retval.emplace_back(Ident(t_str));
+
+      } else if (this->op_match.matches(t_str)) {
+	retval.emplace_back(Operator(t_str));
+
+      } else {
+	std::cerr << "'" << t_str << "'" << std::endl;
+	assert(false && "Failed token parsing!");
+
+      }	
     }
 
     return retval;
