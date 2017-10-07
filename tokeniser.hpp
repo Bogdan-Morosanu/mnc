@@ -6,6 +6,8 @@
 #include <regex>
 #include <variant>
 
+#include "token_types.hpp"
+
 namespace mnc {
 
   /// split a string using whitespace as delimiters
@@ -21,114 +23,7 @@ namespace mnc {
     {
       return std::regex_match(str, T::pattern());
     }
-    
   };
-
-  /// class encapsulating a Token in the source code
-  template < typename PatternHolder >
-  class Token {
-  public:
-    
-    Token() = default;
-
-    explicit
-    Token(const std::string &raw_str)
-      : raw_str(raw_str) { }
-
-    /// the source code string responsible for this token.
-    const std::string&
-    str() const
-    {
-      return raw_str;
-    }
-
-    /// regex pattern this token type matches against
-    static const std::regex&
-    pattern()
-    {
-      static const std::regex pat(PatternHolder::pattern());
-      return pat;
-    }
-
-    /// return a string representing the name of the token
-    static const std::string &
-    name()
-    {
-      return PatternHolder::name();
-    }
-    
-  private:
-
-    /// the source code string responsible for this token.
-    std::string raw_str;
-
-  };
-  
-  struct IntLitHolder {
-
-    static const std::string&
-    pattern()
-    {
-      static const std::string p = "[0-9]+";
-      return p;
-    }
-
-    static const std::string&
-    name()
-    {
-      static const std::string n = "int";
-      return n;
-    }
-
-  };
-
-  /// integer literal token
-  using IntLit = Token<IntLitHolder>;
-
-  struct IdentHolder {
-
-    static const std::string&
-    pattern()
-    {
-      static const std::string p = "[a-zA-Z_][a-zA-Z0-9_]*";
-      return p;
-    }
-
-    static const std::string&
-    name()
-    {
-      static const std::string n = "ident";
-      return n;
-    }
-
-  };
-  
-  /// indentifier token
-  using Ident = Token<IdentHolder>; 
-
-  struct OperatorHolder {
-
-    static const std::string&
-    pattern()
-    {
-      static const std::string p = "[+-/=<>:?!~&*(){}\\[\\]]+";
-      return p;
-    }
-
-    static const std::string&
-    name()
-    {
-      static const std::string n = "op";
-      return n;
-    }
-
-  };
-
-  /// operator token
-  using Operator = Token<OperatorHolder>;
-
-  /// a variable token type
-  using VarToken = std::variant<IntLit, Ident, Operator>;
 
   /// class mapping strings to vector of tokens
   class Tokeniser {
@@ -136,6 +31,7 @@ namespace mnc {
 
     Tokeniser()
       : int_lit_match()
+      , keyword_match()
       , ident_match()
       , op_match()
     { }
@@ -154,6 +50,8 @@ namespace mnc {
     
     TokenMatcher<IntLit> int_lit_match;
 
+    TokenMatcher<KeyWord> keyword_match;
+    
     TokenMatcher<Ident> ident_match;
 
     TokenMatcher<Operator> op_match;

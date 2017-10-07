@@ -57,7 +57,10 @@ namespace mnc {
     retval.reserve(str_vec.size());
 
     for (const auto &t_str : str_vec) {
-      if (this->int_lit_match.matches(t_str)) {
+      if (this->keyword_match.matches(t_str)) {
+	retval.emplace_back(KeyWord(t_str));
+	
+      } else if (this->int_lit_match.matches(t_str)) {
 	retval.emplace_back(IntLit(t_str));
 	
       } else if (this->ident_match.matches(t_str)) {
@@ -65,7 +68,7 @@ namespace mnc {
 
       } else if (this->op_match.matches(t_str)) {
 	retval.emplace_back(Operator(t_str));
-
+	
       } else {
 	std::cerr << "'" << t_str << "'" << std::endl;
 	assert(false && "Failed token parsing!");
