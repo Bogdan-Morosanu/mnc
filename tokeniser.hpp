@@ -1,16 +1,18 @@
 #ifndef MNC_TOKENISER
 #define MNC_TOKENISER
 
+#include <string_view>
 #include <string>
 #include <vector>
 #include <regex>
 #include <variant>
+#include <optional>
 
 #include "token_types.hpp"
 
 namespace mnc {
 
-  /// split a string using whitespace as delimiters
+  /// split a string using spaces as delimiters
   std::vector<std::string>
   space_split(const std::string &str);
 
@@ -22,6 +24,14 @@ namespace mnc {
     bool matches(const std::string &str)
     {
       return std::regex_match(str, T::pattern());
+    }
+
+    /// @return optional iterator past first match of token in string view.
+    /// @post returned option is invalid on match failure.
+    std::optional<std::string_view::const_iterator>
+    first_match_end(std::string_view sv) const
+    {
+      return {}; // currently not implemented
     }
   };
 

@@ -5,7 +5,8 @@
 #include <iostream>
 
 namespace mnc {
-  
+
+  /// split a string using spaces as delimiters
   std::vector<std::string>
   space_split(const std::string &str)
   {
@@ -49,7 +50,6 @@ namespace mnc {
     return retval;
   }
 
-  
   std::vector<VarToken>
   Tokeniser::str_to_token(const std::vector<std::string> &str_vec)
   {
@@ -79,4 +79,3 @@ namespace mnc {
     return retval;
   }
 }
-
